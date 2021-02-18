@@ -1,15 +1,33 @@
 import logging
 import logstash
 
-host = 'XXX.XXX.XXX.XXX'
+class Sender:
 
-test_logger = logging.getLogger('python-logstash-logger')
-test_logger.setLevel(logging.INFO)
-test_logger.addHandler(logstash.TCPLogstashHandler(host, 5000, version=1))
+    """
+    Running example
+    send = Sender(hostname)
+    send.error("Error!!!")
+    """
 
-test_logger.error('python-logstash: test logstash error message.')
-test_logger.info('python-logstash: test logstash info message.')
-test_logger.warning('python-logstash: test logstash warning message.')
+    def __init__(self, host):
+        self.host = host
+        self.setup_sender()
 
-extra = {}
-test_logger.info('python-logstash: test extra fields', extra=extra)
+
+    def setup_sender(self):
+        self._logger = logging.getLogger('python-logstash-logger')
+        self._logger.setLevel(logging.INFO)
+        self._logger.addHandler(logstash.TCPLogstashHandler(self.host, 5000, version=1))
+        print("Setup completed successfully")
+
+
+    def error(self, msg: str, extra = None):
+        self._logger.error(msg, extra=extra)
+
+
+    def info(self, msg: str, extra = None):
+        self._logger.info(msg, extra=extra)
+
+
+    def warning(self, msg: str, extra = None):
+        self._logger.warning(msg, extra=extra)
