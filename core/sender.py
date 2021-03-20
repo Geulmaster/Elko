@@ -1,5 +1,16 @@
+from configparser import ConfigParser
+from pathlib import Path
 import logging
 import logstash
+
+def config_reader():
+    config_file = Path(__file__).parent / 'config.ini'
+    parser = ConfigParser()
+    parser.read(config_file)
+    return parser
+
+configuration = config_reader()
+
 
 class Sender:
 
@@ -15,7 +26,7 @@ class Sender:
 
 
     def setup_sender(self):
-        self._logger = logging.getLogger('python-logstash-logger')
+        self._logger = logging.getLogger(configuration["ELASTIC"]["Index"])
         self._logger.setLevel(logging.INFO)
         self._logger.addHandler(logstash.TCPLogstashHandler(self.host, 5000, version=1))
         print("Setup completed successfully")
